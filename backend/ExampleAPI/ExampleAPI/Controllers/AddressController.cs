@@ -35,10 +35,11 @@ namespace ExampleAPI.Controllers
 
         // POST api/<AddressController>
         [HttpPost]
-        public void Post([FromBody] Address address)
+        public ActionResult Post([FromBody] Address address)
         {
             _repositoryContext.Set<Address>().Add(address);
             _repositoryContext.SaveChanges();
+            return Ok(address);
         }
 
         // PUT api/<AddressController>/5
@@ -54,6 +55,7 @@ namespace ExampleAPI.Controllers
         public void Delete(Guid id)
         {
             _repositoryContext.Set<Address>().Remove(Get(id));
+            _repositoryContext.SaveChanges();
         }
     }
 }

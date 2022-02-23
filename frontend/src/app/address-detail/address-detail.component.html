@@ -1,0 +1,50 @@
+<h1>Address</h1>
+<button type="button" [routerLink]="['']" class="btn btn-primary">Back</button>
+<div *ngIf="getContentLoaded()" class="container-fluid">
+  <table>
+    <tbody>
+    <tr>
+      <td>
+        Country
+      </td>
+      <td>
+        {{getAddress().country}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Zipcode
+      </td>
+      <td>
+        {{getAddress().zipcode}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        City
+      </td>
+      <td>
+        {{getAddress().city}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Street
+      </td>
+      <td>
+        {{getAddress().street}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Number
+      </td>
+      <td>
+        {{getAddress().number}}
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <button type="button" [routerLink]="['edit']" class="btn btn-warning">Edit</button>
+  <button type="button" (click)="deleteCategory(getAddress().id)" class="btn btn-danger">Delete</button>
+</div>
