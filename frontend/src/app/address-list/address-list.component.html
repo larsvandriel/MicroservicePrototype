@@ -1,0 +1,54 @@
+<div class="row">
+  <h2 class="col-md-9 text-left">Addresses</h2>
+  <button type="button" class="btn btn-primary" routerLink="create">Create</button>
+</div>
+
+<div *ngIf="getContentLoaded()">
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th>
+        Country
+      </th>
+      <th>
+        Zipcode
+      </th>
+      <th>
+        City
+      </th>
+      <th>
+        Street
+      </th>
+      <th>
+        Number
+      </th>
+      <th>
+
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let address of getAddresses()" (click)="navigateToAddressDetails(address.id)">
+      <td>
+        {{address.country}}
+      </td>
+      <td>
+        {{address.zipcode}}
+      </td>
+      <td>
+        {{address.city}}
+      </td>
+      <td>
+        {{address.street}}
+      </td>
+      <td>
+        {{address.number}}
+      </td>
+      <td>
+        <button type="button" [routerLink]="[address.id, 'edit']" class="btn btn-warning">Edit</button>
+        <button type="button" (click)="deleteAddress(address.id)" class="btn btn-danger">Delete</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
