@@ -7,7 +7,7 @@ import {Address} from './address';
   providedIn: 'root'
 })
 export class AddressService {
-  baseUrl = 'https://localhost:7176/api/';
+  baseUrl = 'http://localhost:7176/api/';
 
   constructor(private httpClient: HttpClient) {
   }
