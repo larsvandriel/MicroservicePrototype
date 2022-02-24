@@ -1,0 +1,28 @@
+name: BuildAndPublish
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build_backend:
+    runs-on: windows-2022
+    
+    steps:
+      - uses: actions/checkout@v2
+    
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-verion: '6.0'
+      
+      - name: Install dependencies
+        run: dotnet restore
+        working-directory: ./backend/ExampleAPI/ExampleAPI
+      
+      - name: Build
+        run: dotnet build
+        working-directory: ./backend/ExampleAPI/ExampleAPI
