@@ -1,0 +1,42 @@
+version: "3.7"
+
+services:
+  db:
+    container_name: mssqlDb
+    image: "mcr.microsoft.com/mssql/server"
+    volumes:
+      - example_volume:/var/opt/mssql
+    environment:
+      SA_PASSWORD: "pw123_Example"
+      ACCEPT_EULA: "Y"
+    ports:
+    - "1433"
+    - "1001:1433"
+    networks:
+      - example
+  backend:
+    depends_on:
+      - db
+    container_name: backendAPI
+    build:
+      context: backend\ExampleAPI
+      dockerfile: ExampleAPI\Dockerfile
+    ports:
+    - "7176:80" 
+    networks:
+      - example
+  frontend:
+    depends_on:
+      - backend
+    container_name: frontend
+    build:
+      context: frontend
+    ports:
+    - "4200:4200"
+    networks:
+      - example
+volumes:
+  example_volume:
+networks:
+  example:
+    external: true
