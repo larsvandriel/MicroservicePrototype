@@ -53,7 +53,7 @@ jobs:
         run: ng build
         working-directory: ./frontend
         
-  sonar_cloud:
+  sonar_cloud_backend:
     needs: [build_and_test_backend, build_frontend]
     runs-on: windows-latest
     
@@ -93,10 +93,22 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"larsvandriel_MicroservicePrototype_backend" /o:"larsvandriel" /d:sonar.login="${{ secrets.SONAR_TOKEN_BACKEND }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build ./backend/ExampleAPI/ExampleAPI
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN_BACKEND }}"
-    
+  
+  sonar_cloud_frontend:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONTEND }}
       
   deploy_backend_to_dockerhub:
-    needs: sonar_cloud
+    needs: sonar_cloud_backend
     runs-on: ubuntu-latest
     
     steps:
@@ -118,8 +130,9 @@ jobs:
         file: ./backend/ExampleAPI/ExampleAPI/Dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USER }}/example_project_backend:latest
+  
   deploy_frontend_to_dockerhub:
-    needs: sonar_cloud
+    needs: sonar_cloud_frontend
     runs-on: ubuntu-latest
     
     steps:
