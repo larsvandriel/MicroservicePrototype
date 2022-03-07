@@ -75,5 +75,4 @@ jobs:
         context: ./backend/ExampleAPI
         file: ExampleAPI/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/backend:latest
         
