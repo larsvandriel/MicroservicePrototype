@@ -1,0 +1,50 @@
+name: BuildAndPublish
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build_backend:
+    runs-on: windows-2022
+    
+    steps:
+      - uses: actions/checkout@v2
+    
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0'
+      
+      - name: Install dependencies
+        run: dotnet restore
+        working-directory: ./backend/ExampleAPI/ExampleAPI
+      
+      - name: Build
+        run: dotnet build
+        working-directory: ./backend/ExampleAPI/ExampleAPI
+  build_frontend:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./frontend
+      
+      - name: Install Angular
+        run: npm install -g @angular/cli
+        
+      - name: Build
+        run: ng build
+        working-directory: ./frontend
+      
