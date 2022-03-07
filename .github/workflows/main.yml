@@ -96,7 +96,6 @@ jobs:
   
   sonar_cloud_frontend:
     needs: build_frontend
-    name: SonarCloud
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
