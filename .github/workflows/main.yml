@@ -77,6 +77,6 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: ./backend/ExampleAPI
-        file: ./ExampleAPI/Dockerfile
+        file: ./backend/ExampleAPI/ExampleAPI/Dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USER }}/example_project_backend:latest
