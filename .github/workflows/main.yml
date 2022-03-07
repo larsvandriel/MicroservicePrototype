@@ -54,7 +54,7 @@ jobs:
         working-directory: ./frontend
         
   sonar_cloud_backend:
-    needs: [build_and_test_backend, build_frontend]
+    needs: build_and_test_backend
     runs-on: windows-latest
     
     steps:
@@ -95,6 +95,7 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN_BACKEND }}"
   
   sonar_cloud_frontend:
+    needs: build_frontend
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
