@@ -54,6 +54,7 @@ jobs:
         working-directory: ./frontend
       
   deploy_backend_to_dockerhub:
+    needs: build_and_test_backend
     runs-on: ubuntu-latest
     
     steps:
