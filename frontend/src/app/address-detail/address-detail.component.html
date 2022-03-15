@@ -1,5 +1,5 @@
 <h1>Address</h1>
-<button type="button" [routerLink]="['']" class="btn btn-primary">Back</button>
+<button type="button" [routerLink]="['', 'address']" class="btn btn-primary">Back</button>
 <div *ngIf="getContentLoaded()" class="container-fluid">
   <table>
     <tbody>
@@ -46,5 +46,5 @@
     </tbody>
   </table>
   <button type="button" [routerLink]="['edit']" class="btn btn-warning">Edit</button>
-  <button type="button" (click)="deleteCategory(getAddress().id)" class="btn btn-danger">Delete</button>
+  <button type="button" (click)="deleteAddress(getAddress().id)" class="btn btn-danger">Delete</button>
 </div>

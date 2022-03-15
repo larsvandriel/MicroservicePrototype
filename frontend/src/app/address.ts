@@ -8,12 +8,12 @@ export class Address {
 
   constructor(
     id: string,
-    country: string,
-    zipcode: string,
-    city: string,
-    street: string,
+    country: string = '',
+    zipcode: string = '',
+    city: string = '',
+    street: string = '',
     // tslint:disable-next-line:variable-name
-    _number: string
+    _number: string = ''
   ) {
     this.id = id;
     this.country = country;
@@ -21,5 +21,10 @@ export class Address {
     this.city = city;
     this.street = street;
     this.number = _number;
+  }
+
+  ToString(): string
+  {
+    return this.zipcode + ' ' + this.city + ' ' + this.street + ' ' + this.number;
   }
 }

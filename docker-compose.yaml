@@ -1,40 +1,96 @@
 version: "3.7"
 
 services:
-  db:
-    container_name: mssqlDb
+  db_address:
+    container_name: mssqlDbAddress
     image: "mcr.microsoft.com/mssql/server"
     volumes:
-      - example_volume:/var/opt/mssql
+      - example_volume:/var/opt/mssql/address
     environment:
       SA_PASSWORD: "pw123_Example"
       ACCEPT_EULA: "Y"
     ports:
-    - "1433"
-    - "1001:1433"
+      - "1433"
+      - "1001:1433"
     networks:
       - example
-  backend:
+
+  db_person:
+    container_name: mssqlDbPerson
+    image: "mcr.microsoft.com/mssql/server"
+    volumes:
+      - example_volume:/var/opt/mssql/person
+    environment:
+      SA_PASSWORD: "pw123_Example"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1434"
+      - "1002:1433"
+    networks:
+      - example
+
+  zookeeper:
+    container_name: zookeeper
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+  
+  kafka:
+    container_name: kafka
+    image: confluentinc/cp-kafka:latest
     depends_on:
-      - db
-    container_name: backendAPI
+      - zookeeper
+    ports:
+      - 29092:29092
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+  
+  backend_address:
+    depends_on:
+      - db_address
+      - kafka
+    container_name: backendAPIAddress
     build:
       context: backend\ExampleAPI
       dockerfile: ExampleAPI\Dockerfile
     ports:
-    - "7176:80" 
+      - "7176:80"
     networks:
       - example
+
+  backend_person:
+    depends_on:
+      - db_person
+      - kafka
+    container_name: backendAPIPerson
+    build:
+      context: backend\ExampleAPI
+      dockerfile: ExampleAPI2\Dockerfile
+    ports:
+      - "7194:80"
+    networks:
+      - example
+
   frontend:
     depends_on:
-      - backend
+      - backend_address
+      - backend_person
     container_name: frontend
     build:
       context: frontend
     ports:
-    - "4200:4200"
+      - "4200:4200"
     networks:
       - example
+
 volumes:
   example_volume:
 networks:

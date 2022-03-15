@@ -32,7 +32,7 @@ export class AddressEditComponent implements OnInit {
 
   editAddress(): void {
     this.addressService.editAddress(this.address).subscribe(data => {
-      this.router.navigate([this.address.id]);
+      this.router.navigate(['address', this.address.id]);
     });
   }
 

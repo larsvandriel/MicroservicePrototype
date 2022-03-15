@@ -27,7 +27,7 @@ export class AddressCreateComponent implements OnInit {
   createAddress(): void {
     this.addressService.createAddress(this.address).subscribe(data => {
       console.log(data);
-      this.router.navigate([data.id]);
+      this.router.navigate(['address', data.id]);
     });
   }
 }

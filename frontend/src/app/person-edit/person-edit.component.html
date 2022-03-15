@@ -1,0 +1,28 @@
+<h1>Edit Person</h1>
+
+<form (ngSubmit)="editPerson()" #addressForm="ngForm" >
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" class="form-control" id="name" name="name" required [(ngModel)]="person.name">
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="text" class="form-control" id="email" name="email" required [(ngModel)]="person.email">
+  </div>
+
+  <div class="form-group">
+    <label for="phoneNumber">Phone Number</label>
+    <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required [(ngModel)]="person.phoneNumber">
+  </div>
+
+  <div class="form-group">
+    <label for="address">Address</label>
+    <select type="text" class="form-select" id="address" name="address" required [(ngModel)]="person.address">
+      <option *ngFor="let address of addresses" [value]="address">{{address.ToString()}}</option>
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-success" [disabled]="!addressForm.form.valid">Create Address</button>
+  <button type="cancel" class="btn btn-danger" [routerLink]="['person']">Cancel</button>
+</form>

@@ -55,7 +55,7 @@ export class AddressListComponent implements OnInit {
     if (this.getRouterLinkDisabled()) {
       return;
     }
-    this.router.navigate([addressId]);
+    this.router.navigate(['address', addressId]);
   }
 
 }

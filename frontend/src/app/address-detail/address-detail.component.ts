@@ -32,9 +32,9 @@ export class AddressDetailComponent implements OnInit {
     return this.contentLoaded;
   }
 
-  deleteCategory(addressId: string): void {
+  deleteAddress(addressId: string): void {
     this.addressService.deleteAddress(addressId).subscribe((data => {
-      this.router.navigate(['']);
+      this.router.navigate(['address']);
     }));
   }
 

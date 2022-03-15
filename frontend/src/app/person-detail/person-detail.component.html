@@ -1,0 +1,42 @@
+<h1>Person</h1>
+<button type="button" [routerLink]="['', 'person']" class="btn btn-primary">Back</button>
+<div *ngIf="getContentLoaded()" class="container-fluid">
+  <table>
+    <tbody>
+    <tr>
+      <td>
+        Name
+      </td>
+      <td>
+        {{getPerson().name}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Email
+      </td>
+      <td>
+        {{getPerson().email}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        PhoneNumber
+      </td>
+      <td>
+        {{getPerson().phoneNumber}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Address
+      </td>
+      <td>
+        {{getPerson().address.ToString()}}
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <button type="button" [routerLink]="['edit']" class="btn btn-warning">Edit</button>
+  <button type="button" (click)="deletePerson(getPerson().id)" class="btn btn-danger">Delete</button>
+</div>
