@@ -1,4 +1,5 @@
 ﻿using ExampleAPI.Data;
+using ExampleAPI.Kafka;
 using ExampleAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ namespace ExampleAPI.Controllers
     public class AddressController : ControllerBase
     {
         private readonly RepositoryContext _repositoryContext;
+        private readonly IKafkaProducer _producer;
 
-        public AddressController(RepositoryContext repositoryContext)
+        public AddressController(RepositoryContext repositoryContext, IKafkaProducer kafkaProducer)
         {
             _repositoryContext = repositoryContext;
+            _producer = kafkaProducer;
         }
         
         // GET: api/<AddressController>
@@ -38,6 +41,7 @@ namespace ExampleAPI.Controllers
         public ActionResult Post([FromBody] Address address)
         {
             _repositoryContext.Set<Address>().Add(address);
+            _producer.CreateAddress(address);
             _repositoryContext.SaveChanges();
             return Ok(address);
         }
@@ -55,6 +59,7 @@ namespace ExampleAPI.Controllers
         public void Delete(Guid id)
         {
             _repositoryContext.Set<Address>().Remove(Get(id));
+            _producer.DeleteAddress(Get(id));
             _repositoryContext.SaveChanges();
         }
     }

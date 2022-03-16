@@ -1,4 +1,5 @@
 using ExampleAPI.Data;
+using ExampleAPI.Kafka;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,8 @@ builder.Services.Configure<IISOptions>(options =>
 ConfigurationManager config = builder.Configuration;
 var connectionString = config["mssqlconnection:connectionString"];
 builder.Services.AddDbContext<RepositoryContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddScoped<IKafkaProducer, KafkaContext>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
