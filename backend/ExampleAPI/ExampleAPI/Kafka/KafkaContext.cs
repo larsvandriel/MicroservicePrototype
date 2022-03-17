@@ -6,12 +6,6 @@ namespace ExampleAPI.Kafka
 {
     public class KafkaContext: IKafkaProducer
     {
-        private readonly Uri _kafkaUri;
-        public KafkaContext(IConfiguration config)
-        {
-            _kafkaUri = new Uri(config.GetValue<string>("Urls:Kafka"));
-        }
-
         public void CreateAddress(Address address)
         {
             SendMessage("Create Address", JsonSerializer.Serialize(address.Id));
@@ -26,7 +20,7 @@ namespace ExampleAPI.Kafka
         {
             var config = new ProducerConfig
             {
-                BootstrapServers = "kafka:29092"
+                BootstrapServers = "kafka:9092"
             };
 
             Action<DeliveryReport<Null, string>> handler = r =>

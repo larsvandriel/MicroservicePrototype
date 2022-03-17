@@ -1,10 +1,14 @@
 using ExampleAPI2.Data;
+using ExampleAPI2.Kafka;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddSingleton<IHostedService, KafkaConsumerCreateAddress>();
+builder.Services.AddSingleton<IHostedService, KafkaConsumerDeleteAddress>();
 
 builder.Services.AddCors(options =>
 {
