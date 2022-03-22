@@ -5,7 +5,7 @@ namespace ExampleAPI2.Kafka
 {
     public class KafkaConsumerDeleteAddress : IHostedService
     {
-        private readonly string topic = "Delete Address";
+        private readonly string topic = "DeleteAddress";
         private readonly RepositoryContext _repository;
 
         public KafkaConsumerDeleteAddress(RepositoryContext repository)

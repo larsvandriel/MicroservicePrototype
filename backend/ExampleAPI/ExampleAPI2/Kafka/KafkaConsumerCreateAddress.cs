@@ -4,7 +4,7 @@ namespace ExampleAPI2.Kafka
 {
     public class KafkaConsumerCreateAddress : IHostedService
     {
-        private readonly string topic = "Create Address";
+        private readonly string topic = "CreateAddress";
         public Task StartAsync(CancellationToken cancellationToken)
         {
             var conf = new ConsumerConfig
@@ -22,7 +22,9 @@ namespace ExampleAPI2.Kafka
                     while (true)
                     {
                         var consumer = builder.Consume(cancelToken.Token);
+                        Console.WriteLine();
                         Console.WriteLine($"Message: {consumer.Message.Value} received from {consumer.TopicPartitionOffset}");
+                        Console.WriteLine();
                     }
                 }
                 catch (Exception)

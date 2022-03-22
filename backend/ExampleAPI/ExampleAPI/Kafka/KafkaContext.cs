@@ -8,12 +8,12 @@ namespace ExampleAPI.Kafka
     {
         public void CreateAddress(Address address)
         {
-            SendMessage("Create Address", JsonSerializer.Serialize(address.Id));
+            SendMessage("CreateAddress", JsonSerializer.Serialize(address.Id));
         }
 
         public void DeleteAddress(Address address)
         {
-            SendMessage("Delete Address", JsonSerializer.Serialize(address.Id));
+            SendMessage("DeleteAddress", JsonSerializer.Serialize(address.Id));
         }
 
         public void SendMessage(string topic, string message)

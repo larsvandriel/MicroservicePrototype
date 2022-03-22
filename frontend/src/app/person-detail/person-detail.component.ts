@@ -23,6 +23,7 @@ export class PersonDetailComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     this.personService.getPerson(id).subscribe(data => {
+      console.log(data);
       this.person = new Person(data.id, data.name, data.email, data.phoneNumber, new Address(data.address.id));
     });
     this.addressService.getAddress(this.person.address.id).subscribe(data => {

@@ -3,7 +3,7 @@ version: "3.7"
 services:
   db_address:
     container_name: mssqlDbAddress
-    image: "mcr.microsoft.com/mssql/server"
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
     volumes:
       - example_volume:/var/opt/mssql/address
     environment:
@@ -11,21 +11,21 @@ services:
       ACCEPT_EULA: "Y"
     ports:
       - "1433"
-      - "1001:1433"
+      - "1401:1433"
     networks:
       - example
 
   db_person:
     container_name: mssqlDbPerson
-    image: "mcr.microsoft.com/mssql/server"
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
     volumes:
       - example_volume:/var/opt/mssql/person
     environment:
       SA_PASSWORD: "pw123_Example"
       ACCEPT_EULA: "Y"
     ports:
-      - "1434"
-      - "1002:1434"
+      - "1433"
+      - "1402:1433"
     networks:
       - example
 
@@ -58,11 +58,44 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
     networks:
       - example
+    healthcheck:
+      test: ["CMD", "java", "-jar", "/Ping.jar", "localhost", "9092"]
+      interval: 30s
+      timeout: 10s
+      retries: 4
+
+  kafka-setup:
+    image: confluentinc/cp-kafka:latest
+    hostname: kafka-setup
+    container_name: kafka-setup
+    depends_on:
+      - kafka
+    volumes:
+      - $PWD/connectors:/tmp/connectors
+      - $PWD/dashboard:/tmp/dashboard
+    command: "bash -c 'echo Waiting for Kafka to be ready... && \
+                       cub kafka-ready -b kafka:9092 1 20 && \
+                       kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic CreateAddress && \
+                       kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic DeleteAddress && 
+                       echo Waiting 60 seconds for Connect to be ready... && \
+                       sleep 60 && \
+                       curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_elasticsearch_docker.config && \
+                       curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_jdbc_customers_docker.config && \
+                       echo Waiting 90 seconds for Elasticsearch and Kibana to be ready... && \
+                       sleep 90 && \
+                       /tmp/dashboard/docker-combined.sh'"
+    environment:
+      # The following settings are listed here only to satisfy the image's requirements.
+      # We override the image's `command` anyways, hence this container will not start a broker.
+      KAFKA_BROKER_ID: ignored
+      KAFKA_ZOOKEEPER_CONNECT: ignored
   
   backend_address:
+    restart: on-failure
     depends_on:
       - db_address
       - kafka
+      - kafka-setup
     container_name: backendAPIAddress
     build:
       context: backend\ExampleAPI
@@ -76,6 +109,7 @@ services:
     depends_on:
       - db_person
       - kafka
+      - kafka-setup
     container_name: backendAPIPerson
     build:
       context: backend\ExampleAPI
